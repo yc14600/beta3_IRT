@@ -1,5 +1,5 @@
 # beta3_IRT
-Source code of the paper [$\beta^3$-IRT](https://arxiv.org/abs/1903.04016) (AISTATS 2019)
+Source code of the paper [$\beta^3$-IRT: A New Item Response Model and its Applications](https://arxiv.org/abs/1903.04016)
 
 ## Requirements
 The source code was originally developed on:
@@ -25,7 +25,7 @@ There are two steps to run experiments:
 
 2. The first step will automatically generate data files for the second step, and the file named with \"irt_data_*.csv\" is the input parameter of the command to run $\beta^3$ IRT model, i.e.:
     ```
-    python betairt_test.py --IRT_dfile  irt_data_moons_s400_f20_sd42_m12.csv --a_prior_mean 1. --a_prior_std 1.  
+    python betairt_test.py --IRT_dfile irt_data_moons_s400_f20_sd42_m12.csv --a_prior_mean 1. --a_prior_std 1.  
     ```
 
 ## Citing $\beta^3$-IRT
