@@ -98,23 +98,25 @@ model = Beta_IRT(M,C,theta,delta,a)
 D = np.float32(irt_data.values)
 
 model.init_inference(data=D)
-model.fit(n_iter=niter)
+
+sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+model.fit(n_iter=niter,sess=sess)
 
 # generate output files #
 
 # output ability
 ability = pd.DataFrame(index=irt_data.columns)
-ability['ability'] = tf.nn.sigmoid(model.qtheta.distribution.loc).eval()
+ability['ability'] = tf.nn.sigmoid(model.qtheta.distribution.loc).eval(session=sess)
 ability.loc['stddev'] = ability.ability.std()
 ability.to_csv(result_path+'/irt_ability_vi_'+partial_save_name+'.csv') 
 
 # output difficulty and discrimination
 if args.fixed_a:
-    discrimination = a.eval()
+    discrimination = a.eval(session=sess)
 else:   
-    discrimination = model.qa.loc.eval()
+    discrimination = model.qa.loc.eval(session=sess)
 
-difficulty = tf.nn.sigmoid(model.qdelta.distribution.loc).eval()
+difficulty = tf.nn.sigmoid(model.qdelta.distribution.loc).eval(session=sess)
 if args.plot_scatter:
     fig = vs.plot_parameters(xtest.values[:,:-1], difficulty, discrimination)
     fig.savefig(result_path+'/irt_parameters_vi_'+partial_save_name+'.pdf') 
