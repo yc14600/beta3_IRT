@@ -17,7 +17,7 @@ import visualization.plots as vs
 import pandas as pd
 import argparse
 
-from utils.distributions import Normal,Beta
+from hsvi.tensorflow.distributions import Normal,Beta
 
 def str2bool(x):
     if x.lower() == 'false':

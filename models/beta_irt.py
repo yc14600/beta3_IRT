@@ -5,9 +5,9 @@ from __future__ import print_function
 import tensorflow as tf
 
 
-from hsvi.Hierarchi_klqp import Hierarchi_klqp
+from hsvi.tensorflow import Hierarchy_SVI
 
-from utils.distributions import Normal,Beta,TransformedDistribution,RandomVariable
+from hsvi.tensorflow.distributions import Normal,Beta,TransformedDistribution,RandomVariable
 
 ds = tf.contrib.distributions
 
@@ -53,17 +53,15 @@ class Beta_IRT:
         # for discrimination a is latent variable
         if isinstance(self.a_prior,RandomVariable):  
             if isinstance(self.theta_prior, RandomVariable):      
-                self.inference = Hierarchi_klqp(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
+                self.inference = Hierarchy_SVI(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
                             local_vars={self.theta_prior:self.qtheta,self.delta_prior:self.qdelta},local_data={self.x:data})
             else:
-                self.inference = Hierarchi_klqp(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
+                self.inference = Hierarchy_SVI(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
                             local_vars={self.delta_prior:self.qdelta},local_data={self.x:data})
         # for discrimination a is constant
         else:      
-            self.inference = Hierarchi_klqp(latent_vars={self.theta_prior:self.qtheta,self.delta_prior:self.qdelta},data={self.x:data})
+            self.inference = Hierarchy_SVI(latent_vars={self.theta_prior:self.qtheta,self.delta_prior:self.qdelta},data={self.x:data})
         
-        self.inference.initialize(auto_transform=False,n_iter=n_iter,n_print=n_print)
-
     
     def fit(self,local_iter=50):
         
@@ -75,6 +73,6 @@ class Beta_IRT:
                     self.inference.update(scope='local')
             
             info_dict = self.inference.update(scope='global')
-            self.inference.print_progress(info_dict)
+            
         
 
