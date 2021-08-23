@@ -7,23 +7,17 @@ from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
-import edward as ed
-import six
-import os
 import sys
 import re
-import time
 
 
 from models.beta_irt import Beta_IRT
 import visualization.plots as vs
 
-import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
 import argparse
 
-from edward.models import Normal,Beta,Gamma,TransformedDistribution,InverseGamma
+from utils.distributions import Normal,Beta
 
 def str2bool(x):
     if x.lower() == 'false':
@@ -46,7 +40,8 @@ parser.add_argument('-sd','--seed', default=42, type=int, help='random seed')
 
 args = parser.parse_args()
 print('seed',args.seed)
-ed.set_seed(args.seed)
+tf.set_random_seed(args.seed)
+np.random.seed(args.seed)
 
 
 
