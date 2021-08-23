@@ -75,7 +75,7 @@ class Beta_IRT:
             
             info_dict = self.inference.update(scope='global',sess=sess)
 
-            if (jj+1)%50==0 or jj==0:
+            if (jj+1)%100==0 or jj==0:
                 print(info_dict['loss'])
             
         

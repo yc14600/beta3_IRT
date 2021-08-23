@@ -38,6 +38,7 @@ parser.add_argument('-as','--a_prior_std', default=1., type=float, help='prior s
 parser.add_argument('-fa','--fixed_a', default=False, type=str2bool, help='if use fixed discrimination, set to True')
 parser.add_argument('-plts','--plot_scatter', default=False, type=str2bool, help='plot scatter figures for 2D data')
 parser.add_argument('-sd','--seed', default=42, type=int, help='random seed')
+parser.add_argument('-itr','--niter', default=1000, type=int, help='number of iterations')
 
 args = parser.parse_args()
 print('seed',args.seed)
@@ -65,10 +66,7 @@ result_path = os.path.join(args.result_path,dataset)
 if not os.path.exists(result_path):
     os.mkdir(result_path)
 
-if dataset in ['mnist','fashion']:
-    niter = 2000
-else:
-    niter = 1000
+niter = args.niter
 
 
 
