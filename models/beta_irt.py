@@ -61,7 +61,9 @@ class Beta_IRT:
         else:      
             self.inference = Hierarchy_SVI(latent_vars={'local':{self.theta_prior:self.qtheta,self.delta_prior:self.qdelta}},data={'local':{self.x:data}})
         
-    
+        self.inference.train_size = data.shape[0]
+
+        
     def fit(self,n_iter=1000,local_iter=10,sess=None):
         if sess is None:
             sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
