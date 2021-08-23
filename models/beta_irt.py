@@ -32,12 +32,12 @@ class Beta_IRT:
         with tf.variable_scope('local'):
             # variational posterior of ability
             if isinstance(self.theta_prior,RandomVariable):
-                self.qtheta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([C])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([C])))),\
+                self.qtheta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([C],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.random_normal([C],stddev=0.01)))),\
                                                            bijector=ds.bijectors.Sigmoid(), sample_shape=[M],name='qtheta')
             else: 
                 self.qtheta = self.theta_prior
             # variational posterior of difficulty
-            self.qdelta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([M])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([M])))), \
+            self.qdelta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([M],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.random_normal([M],stddev=0.01)))), \
                                                             bijector=ds.bijectors.Sigmoid(), sample_shape=[C],name='qdelta')
 
         alpha = (tf.transpose(self.qtheta)/self.qdelta)**self.qa
@@ -62,7 +62,7 @@ class Beta_IRT:
             self.inference = Hierarchy_SVI(latent_vars={'local':{self.theta_prior:self.qtheta,self.delta_prior:self.qdelta}},data={'local':{self.x:data}})
         
     
-    def fit(self,n_iter=1000,local_iter=50,sess=None):
+    def fit(self,n_iter=1000,local_iter=10,sess=None):
         if sess is None:
             sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
         tf.global_variables_initializer().run(session=sess)
