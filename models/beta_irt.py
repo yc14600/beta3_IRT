@@ -2,18 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import numpy as np
 import tensorflow as tf
-import edward as ed
-import six
-import os
-import sys
-import re
-import time
+
 
 from hsvi.Hierarchi_klqp import Hierarchi_klqp
 
-from edward.models import Normal,Beta,Gamma,TransformedDistribution,InverseGamma,RandomVariable
+from utils.distributions import Normal,Beta,TransformedDistribution,RandomVariable
 
 ds = tf.contrib.distributions
 
@@ -28,7 +22,7 @@ class Beta_IRT:
         self.a_prior = a_prior  # prior of discrimination
      
 
-        if isinstance(a_prior,ed.RandomVariable):
+        if isinstance(a_prior,RandomVariable):
             # variational posterior of discrimination
             self.qa = Normal(loc=tf.Variable(tf.ones([M])), scale=tf.nn.softplus(tf.Variable(tf.ones([M])*.5)),name='qa')
         else:
@@ -76,7 +70,7 @@ class Beta_IRT:
         tf.global_variables_initializer().run()
 
         for jj in range(self.inference.n_iter):  
-            if isinstance(self.a_prior,ed.RandomVariable):
+            if isinstance(self.a_prior,RandomVariable):
                 for _ in range(local_iter):
                     self.inference.update(scope='local')
             
