@@ -9,6 +9,7 @@ import numpy as np
 import tensorflow as tf
 import sys
 import re
+import os
 
 
 from models.beta_irt import Beta_IRT
@@ -60,8 +61,9 @@ if len(in_f) < 7:
 irt_data = pd.read_csv(file_name)
 
 dataset = in_f[2]
-result_path = args.result_path if args.result_path[-1] == '/' else args.result_path+'/'
-result_path = args.result_path+dataset
+result_path = os.path.join(args.result_path,dataset)
+if not os.path.exists(result_path):
+    os.mkdir(result_path)
 
 if dataset in ['mnist','fashion']:
     niter = 2000
