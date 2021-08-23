@@ -24,7 +24,8 @@ class Beta_IRT:
 
         if isinstance(a_prior,RandomVariable):
             # variational posterior of discrimination
-            self.qa = Normal(loc=tf.Variable(tf.ones([M])), scale=tf.nn.softplus(tf.Variable(tf.ones([M])*.5)),name='qa')
+            with tf.variable_scope('global'):
+                self.qa = Normal(loc=tf.Variable(tf.ones([M])), scale=tf.nn.softplus(tf.Variable(tf.ones([M])*.5)),name='qa')
         else:
             self.qa = a_prior
 
@@ -48,31 +49,31 @@ class Beta_IRT:
 
 
 
-    def init_inference(self, data, n_iter=1000, n_print=100):
+    def init_inference(self, data):
         
         # for discrimination a is latent variable
         if isinstance(self.a_prior,RandomVariable):  
             if isinstance(self.theta_prior, RandomVariable):      
-                self.inference = Hierarchy_SVI(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
-                            local_vars={self.theta_prior:self.qtheta,self.delta_prior:self.qdelta},local_data={self.x:data})
+                self.inference = Hierarchy_SVI(latent_vars={'global':{self.a_prior:self.qa},'local':{self.theta_prior:self.qtheta,self.delta_prior:self.qdelta}}, data={'global':{self.x:data},'local':{self.x:data}})
             else:
-                self.inference = Hierarchy_SVI(latent_vars={self.a_prior:self.qa}, data={self.x:data}, \
-                            local_vars={self.delta_prior:self.qdelta},local_data={self.x:data})
+                self.inference = Hierarchy_SVI(latent_vars={'global':{self.a_prior:self.qa},'local':{self.delta_prior:self.qdelta}}, data={'global':{self.x:data},'local':{self.x:data}})
         # for discrimination a is constant
         else:      
-            self.inference = Hierarchy_SVI(latent_vars={self.theta_prior:self.qtheta,self.delta_prior:self.qdelta},data={self.x:data})
+            self.inference = Hierarchy_SVI(latent_vars={'local':{self.theta_prior:self.qtheta,self.delta_prior:self.qdelta}},data={'local':{self.x:data}})
         
     
-    def fit(self,local_iter=50):
-        
-        tf.global_variables_initializer().run()
+    def fit(self,n_iter=1000,local_iter=50,sess=None):
+        if sess is None:
+            sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+        tf.global_variables_initializer().run(session=sess)
 
-        for jj in range(self.inference.n_iter):  
+
+        for jj in range(n_iter):  
             if isinstance(self.a_prior,RandomVariable):
                 for _ in range(local_iter):
-                    self.inference.update(scope='local')
+                    self.inference.update(scope='local',sess=sess)
             
-            info_dict = self.inference.update(scope='global')
+            self.inference.update(scope='global',sess=sess)
             
         
 

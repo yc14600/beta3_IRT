@@ -97,8 +97,8 @@ model = Beta_IRT(M,C,theta,delta,a)
 
 D = np.float32(irt_data.values)
 
-model.init_inference(data=D,n_iter=niter)
-model.fit()
+model.init_inference(data=D)
+model.fit(n_iter=niter)
 
 # generate output files #
 
