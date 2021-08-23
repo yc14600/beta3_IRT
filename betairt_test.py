@@ -39,6 +39,8 @@ parser.add_argument('-fa','--fixed_a', default=False, type=str2bool, help='if us
 parser.add_argument('-plts','--plot_scatter', default=False, type=str2bool, help='plot scatter figures for 2D data')
 parser.add_argument('-sd','--seed', default=42, type=int, help='random seed')
 parser.add_argument('-itr','--niter', default=1000, type=int, help='number of iterations')
+parser.add_argument('-litr','--local_iter', default=10, type=int, help='number of local iterations')
+
 
 args = parser.parse_args()
 print('seed',args.seed)
@@ -100,7 +102,7 @@ D = np.float32(irt_data.values)
 model.init_inference(data=D)
 
 sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
-model.fit(n_iter=niter,sess=sess)
+model.fit(n_iter=niter,local_iter=args.local_iter,sess=sess)
 
 # generate output files #
 
