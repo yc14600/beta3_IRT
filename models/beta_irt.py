@@ -32,12 +32,12 @@ class Beta_IRT:
         with tf.variable_scope('local'):
             # variational posterior of ability
             if isinstance(self.theta_prior,RandomVariable):
-                self.qtheta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([C],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.random_normal([C],stddev=0.01)))),\
+                self.qtheta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([C],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.ones([C])))),\
                                                            bijector=ds.bijectors.Sigmoid(), sample_shape=[M],name='qtheta')
             else: 
                 self.qtheta = self.theta_prior
             # variational posterior of difficulty
-            self.qdelta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([M],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.random_normal([M],stddev=0.01)))), \
+            self.qdelta = TransformedDistribution(distribution=Normal(loc=tf.Variable(tf.random_normal([M],stddev=0.01)), scale=tf.nn.softplus(tf.Variable(tf.ones([M])))), \
                                                             bijector=ds.bijectors.Sigmoid(), sample_shape=[C],name='qdelta')
 
         alpha = (tf.transpose(self.qtheta)/self.qdelta)**self.qa
