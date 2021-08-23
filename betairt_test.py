@@ -41,6 +41,7 @@ parser.add_argument('-rp','--result_path', default='./results/', type=str, help=
 parser.add_argument('-am','--a_prior_mean', default=1., type=float, help='prior mean of discrimination')
 parser.add_argument('-as','--a_prior_std', default=1., type=float, help='prior std dev of discrimination')
 parser.add_argument('-fa','--fixed_a', default=False, type=str2bool, help='if use fixed discrimination, set to True')
+parser.add_argument('-plts','--plot_scatter', default=False, type=str2bool, help='plot scatter figures for 2D data')
 parser.add_argument('-sd','--seed', default=42, type=int, help='random seed')
 
 args = parser.parse_args()
@@ -119,8 +120,7 @@ else:
     discrimination = model.qa.loc.eval()
 
 difficulty = tf.nn.sigmoid(model.qdelta.distribution.loc).eval()
-if not dataset in ['fashion','mnist']:
-    #if not args.fixed_a:
+if args.plot_scatter:
     fig = vs.plot_parameters(xtest.values[:,:-1], difficulty, discrimination)
     fig.savefig(result_path+'/irt_parameters_vi_'+partial_save_name+'.pdf') 
 
@@ -141,7 +141,7 @@ fig.savefig(result_path+'/irt_itemparam_corr_'+partial_save_name+'.pdf')
 
 # output performance of detected noisy points
 if not args.fixed_a:
-    if not dataset in ['fashion','mnist']:
+    if args.plot_scatter:
         fig = vs.plot_noisy_points(xtest,discrimination)
         fig.savefig(result_path+'/dnoise_visual_'+partial_save_name+'.pdf')
     #print(xtest.loc[xtest.noise>0].index)
