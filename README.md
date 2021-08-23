@@ -12,7 +12,7 @@ It was also tested on:
 2. Tensorflow 1.10.0
 3. [Edward](https://github.com/blei-lab/edward) 1.3.5
 
-which requires manually fixing the compatible issues of Tensorflow (> 1.2.0) in Edward and install Edward from the source.
+which requires manually fixing the compatible issues of Tensorflow (> 1.2.0) in Edward. Please find a fixed version from this fork https://github.com/yc14600/edward and install Edward from the source.
 
 
 ## Usage
