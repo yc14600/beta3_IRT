@@ -25,7 +25,7 @@ class Beta_IRT:
         if isinstance(a_prior,RandomVariable):
             # variational posterior of discrimination
             with tf.variable_scope('global'):
-                self.qa = Normal(loc=tf.Variable(tf.ones([M])), scale=tf.nn.softplus(tf.Variable(tf.ones([M])*.5)),name='qa')
+                self.qa = Normal(loc=tf.Variable(tf.ones([M])), scale=tf.nn.softplus(tf.Variable(tf.ones([M])*.1)),name='qa')
         else:
             self.qa = a_prior
 

@@ -89,7 +89,8 @@ C = irt_data.shape[1] #number of classifiers
 
 
 theta = Beta(tf.ones([C]),tf.ones([C]),sample_shape=[M],name='theta')
-delta = Beta(tf.ones([M]),tf.ones([M]),sample_shape=[C],name='delta')
+a,b = np.sum(1-irt_data,axis=1),np.sum(irt_data,axis=1)
+delta = Beta(a,b,sample_shape=[C],name='delta')
 if args.fixed_a:
     a = tf.ones(M)*args.a_prior_mean
 else:
